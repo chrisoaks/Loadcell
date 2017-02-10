@@ -1,5 +1,10 @@
 # Loadcell
 
+This repository is out of sync with the up to date version (need to push my recent changes):
+
+Here's a demo of some more recent capabilities: https://www.facebook.com/chris.oaks.12/posts/1059656317459959
+
+
 The goal:
 
 A standalone application that can read sensors, display data in a couple graphical ways, and store/save the results.
