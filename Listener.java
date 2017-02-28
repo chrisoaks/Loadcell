@@ -5,29 +5,31 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPort;
-import jssc.SerialPortList;
 
-public class LoadCellListener implements SerialPortEventListener {
-	StringBuilder message = new StringBuilder();
-	public SerialPort serialPort;
-	
-	public LoadCellListener() {
-		serialPort = new SerialPort("COM3");
-		System.out.println("Serial Port Opened?" + serialPort.isOpened());			
+public class Listener implements SerialPortEventListener {
+	private StringBuilder message = new StringBuilder();
+	private SerialPort serialPort;
+	private String id;
+	public Listener(String port, String _id) {
+		id=_id;
+		serialPort = new SerialPort(port);
+		//System.out.println("Serial Port" + port + " Opened?" + serialPort.isOpened());			
 		try {
 			serialPort.openPort();
 		
-		System.out.println("Serial Port Opened?" + serialPort.isOpened());
-		serialPort.setParams(230400,8,8,1);
+		//System.out.println("Serial Port" + port + " Opened?" + serialPort.isOpened());
+		if(id=="load") serialPort.setParams(230400,8,8,1);
+		if(id=="ard") serialPort.setParams(9600,8,1,0);
 		serialPort.addEventListener(this);
 		} catch (SerialPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		//System.out.println("Serieal Event called");
+		//System.out.println("Serial Event called");
 
 
 		if(event.isRXCHAR() && event.getEventValue() > 0){
@@ -36,11 +38,11 @@ public class LoadCellListener implements SerialPortEventListener {
 	            for (byte b: buffer) {
 	                    if ( (b == '\r' || b == '\n') && message.length() > 0) {
 	                        String toProcess = message.toString();
-	                        float impactlbs = Float.parseFloat(toProcess);
-	                        System.out.println("float: " + impactlbs);
+	                        float number = Float.parseFloat(toProcess);
+	                        //System.out.println(id + ": " + number);
 	                        Platform.runLater(new Runnable() {
 	                            @Override public void run() {
-	                                Main.addToQueue(impactlbs);
+	                                Controller.addToQueue(number, id);
 	                           }
 	                        });
 	                        message.setLength(0);
@@ -51,12 +53,20 @@ public class LoadCellListener implements SerialPortEventListener {
 	            }                
 	        }
 	        catch (Exception ex) {
-	            System.out.println(ex);
-	            System.out.println("serialEvent");
+	            //System.out.println(ex);
+	            //System.out.println("serialEvent");
 	        }
 	        
 		}// TODO Auto-generated method stub
 
+	}
+	public void close() {
+		try {
+			serialPort.closePort();
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
