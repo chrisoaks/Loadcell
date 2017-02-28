@@ -1,11 +1,4 @@
-#By DavidWCDurst
-#same code will work for DI-100, DI-1000 or iLoad Series load cells
-# 1. install VCP Drivers From (WCttp://www.ftdichip.com/Drivers/VCP.htm)
-# 2. Install PySerial (easy_install pyserial)
-# 3. Identify the scale device (ls /dev/ |grep cu)
-# You are looking for a device that starts with "cu.usbserial"
-# 4. Update code to specify the exact device (Found on Line 4)
-#!/usr/bin/env python
+# This was a rough python prototype of the concept prior to porting everything over to JavaFX
 import time
 import serial
 import io
@@ -28,19 +21,7 @@ ser.flushOutput()
 time.sleep(0.5)
 result = []
 
-#for i in range(10):
-#    ser.write('WC/n')
-#    x = sio.readline()
-#    result.append(x)
-#    print 'Reading %s' % x
-#    try:
-#        result.append(float(x[:-2].encode().strip()))
- #       print 'Reading: ' + x
-#    except ValueError:
-#        result.append(0)
-    #graph.set_ydata(Y)
-    #plt.draw()
-#print result
+
 xar = []
 yar = []
 def animate(i):
